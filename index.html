@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prolific Tea: old vs new UI</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; background: #f4f4f4; color: #111; }
+  header { padding: 16px 24px; background: #111; color: #fff; position: sticky; top: 0; z-index: 2; }
+  header h1 { margin: 0 0 8px; font-size: 20px; }
+  nav a { color: #9fe; margin-right: 12px; font-size: 14px; }
+  label { font-size: 14px; margin-right: 16px; }
+  section { padding: 24px; border-bottom: 1px solid #ccc; }
+  h2 { margin: 0 0 12px; font-size: 18px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .pair figure { margin: 0; background: #fff; border: 1px solid #ccc; }
+  .pair figcaption { font-weight: 700; padding: 6px 10px; background: #222; color: #fff; }
+  .pair img { width: 100%; display: block; }
+  .phone .pair { grid-template-columns: repeat(2, minmax(0, 390px)); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Prolific Tea: old UI (left) vs new UI (right)</h1>
+  <label>Width <select id="w"><option value="1440">Desktop 1440px</option><option value="390">Phone 390px</option></select></label>
+  <label>Theme <select id="t"><option value="light">Light</option><option value="dark">Dark</option></select></label>
+  <nav id="nav"></nav>
+</header>
+<main id="main"></main>
+<script>
+  const PAGES = [
+    ["home", "Home (/)"], ["home-lowest-rated", "Home, lowest rated (/?sort=lowest-rated)"],
+    ["researcher", "Researcher profile (maze.design)"], ["stats", "Stats (/stats)"],
+    ["leaderboard", "Leaderboard (/leaderboard)"], ["guide", "Guide (/guide)"],
+    ["extension", "Extension (/extension)"], ["about", "About (/about)"],
+    ["login", "Login (/login)"], ["register", "Register (/register)"],
+  ];
+  const main = document.getElementById("main"), nav = document.getElementById("nav");
+  nav.innerHTML = PAGES.map(([k, l]) => `<a href="#${k}">${l.split(" (")[0]}</a>`).join("");
+  function render() {
+    const w = document.getElementById("w").value, t = document.getElementById("t").value;
+    main.className = w === "390" ? "phone" : "";
+    main.innerHTML = PAGES.map(([k, l]) => {
+      const f = `${k}-${w}-${t}.png`;
+      return `<section id="${k}"><h2>${l}</h2><div class="pair">
+        <figure><figcaption>Old</figcaption><a href="old/${f}"><img loading="lazy" src="old/${f}" alt="Old UI: ${l}"></a></figure>
+        <figure><figcaption>New</figcaption><a href="new/${f}"><img loading="lazy" src="new/${f}" alt="New UI: ${l}"></a></figure>
+      </div></section>`;
+    }).join("");
+  }
+  document.getElementById("w").onchange = render;
+  document.getElementById("t").onchange = render;
+  render();
+</script>
+</body>
+</html>
